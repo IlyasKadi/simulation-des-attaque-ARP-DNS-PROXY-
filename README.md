@@ -1,277 +1,261 @@
+<div id="top"></div>
+
 
 
-TP 3:
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+    <img src="images/logo.png" alt="Logo" width="700" height="400">
+  <h2 align="center">TP 1</h2>
+  <h3 align="center">Attaques passives : sniffing passif</h3>
+</div>
 
-Simulations d’attaques(DNS,ARP,PROXY)
 
-Résumé
 
-Les entrées ARP peut facilement être manipulées en utilisant des paquets de
+<!-- TABLE OF CONTENTS -->
 
-données falsifiées. On parle alors d’ARP spoofing (de l’anglais spoof, qui signifie
+  <summary>Table of Contents</summary>
+  <ol>
+   <li><a href="#Objectifs-de-ce-TP">Objectifs de ce TP</a></li>
+   <li><a href="#Outils-logiciels">Outils logiciels</a></li>
+   <li><a href="#Informations-utiles">Informations utiles</a></li>
+    <li>
+      <a href="#Part-I">Partie 1 : Attack ARP </a>
+         <ul>
+              <li><a href="#Arp-cache-poisoning"> Arp cache poisoning</a></li>
+        </li>
+        <li><a href="#Part-II">Partie2 : Attack DNS </a>
+            <ul> 
+              <li><a href="#Lancement-du-logiciel-wireshark-et-Observation-des-paquets-capturés">Lancement du logiciel wireshark et Observation des paquets capturés</a></li>
+            </ul>
+                  
+                          <li><a href="#Part-III">Partie3 : Attack proxy </a>
+            <ul> 
+              <li><a href="#Lancement-du-logiciel-wireshark-et-Observation-des-paquets-capturés">Proxy logs sniffing </a></li>
+            </ul>
+              </li>
 
-échanger), un type d’attaque de l’homme du milieu, qui permet aux pirates
 
-d’échanger deux systèmes de communication en passant inaperçuS
+# Attaques passives : sniffing passif
 
+Les sniffers (appelé aussi « analyseurs de protocoles » ou « analyseurs de réseau ») sont des
+outils logiciels qui peuvent capturer les trames circulant sur un réseau local et afficher leurs
+contenus (entêtes des protocoles, identités des utilisateurs, mot de passe non cryptés, etc). Ces
+outils sont utilisés par les administrateurs pour analyser leurs réseaux et localiser les
+problèmes dans ces derniers. Ils sont aussi utilisés par les attaquants pour espionner les
+données circulant dans un réseau local.
 
+<div align="center">
+    <img src="images/1-CS.jpg">
+</div>
 
+# Objectifs-de-ce-TP
+> - Implémenter quelques attaques et les tester
+> - Mise en place de quelques attaques en utilisant des outils d’attaques
 
+# Outils-logiciels
+> - Linux 
+> - bettercap 
+> - http server
 
+# Informations-utiles
+
+• Les entrées ARP peut facilement être manipulées en utilisant des paquets de données
+falsifiées. On parle alors d’ARP spoofing (de l’anglais spoof, qui signifie échanger), un type
+d’attaque de l’homme du milieu, qui permet aux pirates d’échanger deux systèmes de
+communication en passant inaperçus.
+• La finalité de l’empoisonnement DNS est d’acheminer les utilisateurs vers un site Web
+frauduleux. Par exemple, un utilisateur tape « gmail.com » dans un navigateur Web
+avec pour objectif d’aller consulter sa boîte email. Le DNS ayant été empoisonné, ce
+n’est pas la page gmail.com qui s’affiche mais une page frauduleuse choisie par
+l’attaquant, dans le but par exemple de récupérer les accès aux boîtes emails. Les
+utilisateurs saisissant le nom de domaine correct, ils ne se rendent pas compte que le
+site Web qu’ils visitent est un faux, une escroquerie.
+• Les proxy (« serveurs mandataires ») permettent de faire du filtrage intelligent. Il ne
+permet aucune connexion sur une machine locale à partir de l’extérieur. Le proxy gère
+toutes les connexions au nom des machines de réseau local.
+• Toutes les manipulations sont bien évidement à réaliser dans un réseau local,
+dont vous êtes le propriétaire.
+
+
+## Arp-cache-poisoning
+
+<div align="center">
+    <img src="images/compilation.png">
+</div>
+
+> La Compilation du (cc -c sniffer_eth_ip_tcp_data.c).
+
+<div align="center">
+    <img src="images/generation.png">
+</div>
+
+> La génération du (cc sniffer_eth_ip_tcp_data.c -o sniffer).
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+## exécution-du-sniffer
+
+On execute le sniffer pour sniffer les 100 premieres trames reçues
+sur l’interface eth0.
+
+<div align="center">
+    <img src="images/execution.png">
+</div>
+
+> Dans ce cas les trames sont affichées sous format hexadécimal.
 
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+## affichage-du-contenu-de-l’entête-ETHERNET
+Pour afficher le contenu de l’entête ETHERNET, il faut enlever le
+commentaire de la fonction ParseEthernetHeader. Aprés la
+compilation et l’execution nous obtenons le résultat suivant:
 
-**1. Prise en main de bettercap sur kali linux pour des simulation des**
+<div align="center">
+    <img src="images/ETHERNET.png">
+</div>
 
-**attaques.**
+<p align="right">(<a href="#top">back to top</a>)</p>
 
-Dans la machine KALI, nous allons prendre en main l’utilitaire Bettercap (version actuelle :
 
-2.X) pour la supervision et les attaques réseaux.
+## Afficher-du-contenu-des-entêtes-des-protocoles
 
-*Config de base :*
+Pour Afficher le contenu des entêtes des protocoles des niveaux
+supérieurs, enlevez les commentaires des fonctions
+correspondantes (au niveau de la fonction main), on régénère
+l’executable et on l’execute:
 
-Pour l’installation, je vous invite à suivre leur github, qui est très bien documentée :
+<div align="center">
+    <img src="images/protocoles.png">
+</div>
 
-<https://github.com/bettercap/bettercap>
+<p align="right">(<a href="#top">back to top</a>)</p>
 
-**1-** Tout d’abord, pour lancer bettercap, il suffit de lancer la commande suivante :
 
-sudo bettercap
+## La-fonction-qui-permet-d’afficher-l’entête-UDP
 
+La fonction qui affiche l’en-tête UDP :
+```C
+ParseUdpHeader(unsigned char *packet , int len)
+{
+       struct ethhdr *ethernet_header;
+       struct iphdr *ip_header;
+       struct udphdr *udp_header;
+       /* Check if enough bytes are there for TCP Header */
+       if(len >= (sizeof(struct ethhdr) + sizeof(struct iphdr) + sizeof(struct
+udphdr)))
+      {
+              /* Do all the checks: 1. Is it an IP pkt ? 2. is it TCP ? */
+              ethernet_header = (struct ethhdr *)packet;
+              if(ntohs(ethernet_header->h_proto) == ETH_P_IP)
+              {
+                    ip_header = (struct iphdr *)(packet + sizeof(struct ethhdr));
+                    if(ip_header->protocol == IPPROTO_UDP)
+                    {
+                          printf("UDP datagram (UDP num=%d)\n", ip_header->protocol);
+                          udp_header = (struct udphdr*)(packet + sizeof(struct
+ethhdr) + ip_header->ihl*4 );
+                        /* Print the Dest and Src ports */
+                        printf("Source Port: %d\n", ntohs(udp_header->source));
+                        printf("Dest Port: %d\n", ntohs(udp_header->dest));
+                    }
+                    else
+                    {
+                        printf("Not a UDP packet\n");
+                    }
+             }
+             else
+             {
+                     printf("Not an IP packet\n");
+             }
+        }
+        else
+        {
+              printf("UDP Header not present \n");
+        }
+}
+```
 
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 
+# Part-II
+Dans cette partie, nous nous intéressons à la manipulation de quelques sniffers existants.
+(Pour plus d’informations sur l’utilisation de wireshark ([cliquez ici](https://blog.varonis.fr/comment-utiliser-wireshark/)) et ([ici](http://www.machaon.fr/isn/reseaux/Fiche-Wireshark.pdf))
 
-**2-** Avant de commencer à voir les différentes attaques, il faut savoir que nous allons
+## Lancement-du-logiciel-wireshark-et-Observation-des-paquets-capturés
 
-utiliser des « **modules** », et ces derniers peuvent se configurer en utilisant la
+On lance le logiciel Wireshark et on démarre la capture sur
+l’interface eth0:
 
-commande « **set** » :
+<div align="center">
+    <img src="images/wireshark.png">
+</div>
 
-set dns.spoof.domain toto.com
+<p align="right">(<a href="#top">back to top</a>)</p>
 
-Et pour lancer le module, il suffit simplement d’appeler le module et d’ajouter l’argument
+## capturation-des-trafics-échangés-entre-les-machines-du-reste-du-réseau
 
-« **on** » ou « **off** »
+**Est-ce que vous pouvez capturer les trafics échangés entre les machines du reste du réseau?**
 
-dns.spoof on
+Nous n’avons pas pu échanger de trafic entre d'autres machines et le reste du réseau. Car on est pas on mode promiscieux.
 
-**2. Attaque ARP**
+<p align="right">(<a href="#top">back to top</a>)</p>
 
-Cette attaque consiste à empoisonner le cache ARP de la machine cible afin de permettre de
+## Configuration-du-filtre-de-wireshark
+## affichage-du-trames-concernant-les-protocoles
+**L'affichage du trames concernant le protocole: bootp, tcp, icmp,etc**
+<div align="center">
+    <img src="images/icmp.png">
+</div>
 
-router les paquets vers la machine pirate.
 
-En effet, dans un réseau local, toutes les communications se font via les adresses MAC des
+<p align="right">(<a href="#top">back to top</a>)</p>
 
-machines. L’attaque ARP va permettre de modifier la table d’adresse MAC de la victime. Il
+## affichage-du-trames-dont-l'adresse-MAC-destination-est-celle-de-votre-machine
 
-est judicieux de modifier l’adresse MAC de la passerelle par défaut de la victime afin de
+**L'affichage du trames dont l'adresse MAC destination est celle de votre machine**
+<div align="center">
+    <img src="images/MAC.png">
+</div>
 
-pouvoir récupérer tous les paquets transmis par la victime.
+<p align="right">(<a href="#top">back to top</a>)</p>
 
-Attention, si vous attaquez la victime sans configurer votre machine comme « routeur »,
+## affichage-du-trames-échangé-entre-deux-machines
+**L'affichage du trames échangé entre deux machines d'adresse @IP1 et @IP2**
+<div align="center">
+    <img src="images/trames.png">
+</div>
 
-l’attaque sera appelée DOS (**Denial Of Service**). Les requêtes réalisées par la victime ne sera
+<p align="right">(<a href="#top">back to top</a>)</p>
 
-pas transmis au « vrai » destinataire et seront donc « drop ».
+## affichage-du-trames-dont-la-taille-est-supérieure-à-une-taille-donnée
+**L'affichage du trames dont la taille est supérieure à une taille donnée**
+<div align="center">
+    <img src="images/taille.png">
+</div>
 
+<p align="right">(<a href="#top">back to top</a>)</p>
 
+# Part-III
 
+Dans cette section, nous nous intéressons l'utilisation d'un sniffer à distance « remote sniffing » pour obtenir les données circulant sur un autre réseau que celui sur lequel nous sommes. Supposons que nous sommes sur le réseau RES1 et nous voulons sniffer le réseau voisin RES2 (nous sommes séparés par un routeur). Nous utilisons alors un **client sniffer** sur une machine du réseau RES2 qui va sniffer ce dernier et envoyer les données capturées à notre **serveur sniffer** sur le réseau RES1. Le réseau B qui, en principe, était impossible à sniffer est devenu donc très accessible. Nous utilisons le démon **Rpcapd** ([plus de détails](https://www.winpcap.org/docs/docs_412/html/group__remote.html)) qui capture le trafic sur une machine, et est capable d'envoyer les données récupérées à un sniffer comme wireshark qui facilite ainsi la lecture en différenciant les trames et les protocoles. Notons qu'il est utile d'exclure le trafic entre la machine locale et la machine distante en utilisant les filtres de wireshark.
 
+## La-capturation-du-trafic-entre-la-machine-locale-et-la-machine-distante
 
-Il est donc judicieux d’activer le mode routeur du Kali en saisissant cette commande : echo
+<p align="right">(<a href="#top">back to top</a>)</p>
 
-1 > /proc/sys/net/ipv4/ip\_forward
+## Etudier-les-paquets-capturés
 
-Pour trouver la cible que l’on souhaite attaquer, utiliser la commande suivante :
 
-**net.show**
+<p align="right">(<a href="#top">back to top</a>)</p>
 
-\------------------------------------------------------------------------------------------------------------------
 
-\--------------------------------------------------------------------------------------------
+Out Team - [AIT EL KADI Ilyas](https://github.com/IlyasKadi) - [AZIZ Oussama](https://github.com/ATAMAN0) - [BENCHEDI Yahia](https://github.com/Ben776ya)
 
-Notre victime sera la machine possédant l’adresse IP : **192.168.5.99** :
+Project Link: [https://github.com/IlyasKadi/Attaques_passives--sniffing_passif](https://github.com/IlyasKadi/Attaques_passives--sniffing_passif)
 
-set arp.spoof.targets 192.168.5.99
-
-*NB : Par défaut, la cible est le réseau où se trouve l’attaquant. Dans notre cas, s’il y a pas du*
-
-*modification de arp.spoof.target, l’attaque ARP aurait été propagée sur le réseau*
-
-*192.168.5.0/24.*
-
-Verifier la table ARP de la victime (avant l’attaque) :
-
-
-
-
-
-\------------------------------------------------------------------------------------------------------------------
-
-\-----------------------------------------------------------------------------------------------------------
-
-L’adresse MAC commençant par « **e4-5d** » est la passerelle du réseau. L’adresse
-
-MAC commençant par « **d8-cb** » est la machine de l’attaquant
-
-Lorsque nous activons le module :
-
-arp.spoof on
-
-Nous pouvons observer la modification de la table ARP de la victime :
-
-\-----------------------------------------------------------------------------------------------------------------
-
-\-----------------------------------------------------------------------------------------------------------------
-
-A partir de maintenant, nous avons effectué une attaque MITM (**M**an-**I**n-**T**he-**M**iddle). Nous
-
-pouvons « sniffer » le réseau et nous verrons apparaître les paquets transmis par la victime.
-
-
-
-
-
-Nous pouvons dès à présent combiner cette attaque avec une attaque de type « Spoof DNS »
-
-pour vérifier son fonctionnement.
-
-**3. Attaque DNS**
-
-Un « Spoof DNS » consiste à modifier la table DNS d’un client (ou d’un réseau entier).
-
-Lorsque la victime souhaitera contacter le site web http://apache.org (nous allons prendre le
-
-site apache.org comme exemple), il sera alors redirigé vers une autre adresse IP (privée ou
-
-public) en gardant le même nom de domaine.
-
-Nous commençons tout d’abord par configurer le spoof DNS :
-
-set dns.spoof.domains apache.org
-
-set dns.spoof.all true
-
-dns.spoof on
-
-\------------------------------------------------------------------------------------------------------------------
-
-\---------------------------------------------------------------------------------------------------------------
-
-NB : *la commande « set dns.spoof.all true » permet de prendre en compte les requêtes*
-
-*provenant de l’extérieur (et non local à la machine).*
-
-Nous gardons bien évidement l’attaque spoof ARP en place pour cibler l’utilisateur que nous
-
-attaquons.
-
-Rappel :
-
-set arp.spoof.targets 192.168.5.99
-
-arp.spoof on
-
-Vu que nous redirigeons les flux en provenance de « apache.org » vers l’ip de l’attaquant, nous
-
-allons monter un serveur web avec Bettercap :
-
-set http.server.path /var/www/html
-
-http.server on
-
-
-
-
-
-*Attention de ne pas avoir un serveur web déjà allumé, sinon il faut modifier le port dans la*
-
-*configuration du serveur dans Bettercap (set http.server.port)*
-
-\------------------------------------------------------------------------------------------------------------------
-
-\---------------------------------------------------------------------------------------------------------------
-
-Avant la modification de la table ARP de la victime, lorsqu’il se rend sur apache.org il atteint
-
-la page officielle :
-
-Après l’empoisonnement du cache ARP, la page apache.org redirige vers la page web de
-
-l’attaquant :
-
-
-
-
-
-L’attaque DNS est maintenant terminée,
-
-**Attaque Proxy**
-
-Une attaque Proxy est le fait de pouvoir récupérer les logs de toutes les requêtes web. Il est
-
-intéressant de mettre en place un proxy lorsque l’on souhaite bloquer certains sites web dans
-
-une entreprise.
-
-Dans notre cas, nous allons utiliser le proxy pour récupérer les pages que consulte la victime.
-
-Tout d’abord, il faut configurer le niveau de verbosité du sniffer (false équivaut à réduit) :
-
-set net.sniff.verbose false
-
-net.sniff on
-
-
-
-
-
-Puis on configure le proxy :
-
-set http.proxy.sslstrip true
-
-http.proxy on
-
-L’utilisation du paramètre « sslstrip » nous permet d’activer le proxy https, et de proposer au
-
-client un certificat généré par Bettercap.
-
-Là encore nous gardons en place l’attaque ARP afin de cibler la victime.
-
-Et lorsque la victime consulte des pages web, nous avons des messages sur bettercap :
-
-\------------------------------------------------------------------------------------------------------------------
-
-\---------------------------------------------------------------------------------------------------------------
-
-\---
-
-Attention aux sites en HTTPS, certains ont une protection HSTS qui permet de bloquer (ou du
-
-moins complexifier l’attaque) :
-
-voir dans Bettercap que la victime à bien été sur google comme ce suit:
-
-
-
-
-
-Lorsque la victime souhaite accéder à un site en HTTPS (sans HSTS) :
-
-
-
-
-
-Une erreur de certificat apparaît sur la page du navigateur car c’est un certificat non approuvé
-
-par l’autorité de certification. Si la victime continue sans faire attention, nous pourrons alors
-
-récupérer potentiellement des informations confidentielles.
-
-En effet, vu que nous avons généré le certificat pour le proxy, nous détenons la clef privée.
-
-Tous les flux peuvent donc être déchiffrés sans difficultés.
-
-
+<p align="right">(<a href="#top">back to top</a>)</p>
